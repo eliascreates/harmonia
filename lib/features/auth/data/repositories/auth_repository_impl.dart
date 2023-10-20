@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:harmonia/core/errors/auth_exceptions.dart';
-import 'package:harmonia/core/errors/failures.dart';
-import 'package:harmonia/features/auth/data/datasources/remote_firebase_auth_datasource.dart';
-import 'package:harmonia/features/auth/data/mapper/user_mapper.dart';
-import 'package:harmonia/features/auth/domain/domain.dart';
+
+import 'package:harmonia/core/errors/errors.dart';
+
+import '../../domain/domain.dart';
+import '../datasources/remote_firebase_auth_datasource.dart';
+import '../mapper/user_mapper.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final RemoteFirebaseAuthDataSource remoteDataSource;
@@ -18,8 +19,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<Either<Failure, User>> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       final userModel = await remoteDataSource.signInWithEmailAndPassword(
         email: email,
@@ -29,21 +32,40 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = toEntity(userModel);
 
       return Right(user);
-    } on AuthException catch (e) {
-      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      if (e is AuthException) {
+        return Left(ServerFailure(message: e.message));
+      }
+      return const Left(ServerFailure());
     }
   }
 
   @override
-  Future<Either<Failure, Unit>> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<Either<Failure, User>> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final userModel = await remoteDataSource.signUpWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = toEntity(userModel);
+      return Right(user);
+    } catch (e) {
+      if (e is AuthException) return Left(ServerFailure(message: e.message));
+      return const Left(ServerFailure());
+    }
   }
 
   @override
-  Future<Either<Failure, User>> signUpWithEmailAndPassword(
-      {required String email, required String password}) {
-    // TODO: implement signUpWithEmailAndPassword
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> signOut() async {
+    try {
+      await remoteDataSource.signOut();
+      return const Right(unit);
+    } catch (e) {
+      if (e is AuthException) return Left(ServerFailure(message: e.message));
+    }
+    return const Left(ServerFailure());
   }
 }
