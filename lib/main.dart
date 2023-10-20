@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:harmonia/config/theme/theme.dart';
+import 'package:harmonia/core/extensions/extensions.dart';
 
 import 'features/auth/auth.dart';
 import 'service_locator.dart' as di;
@@ -23,12 +24,6 @@ class MyApp extends StatelessWidget {
               signOut: di.sl<SignOut>(),
               authRepository: di.sl<AuthRepository>()),
         ),
-        BlocProvider(
-          create: (context) => SignUpBloc(
-            signUpWithEmailAndPassword: di.sl<SignUpWithEmailAndPassword>(),
-            signInWithEmailAndPassword: di.sl<SignInWithEmailAndPassword>(),
-          ),
-        ),
       ],
       child: const MyAppView(),
     );
@@ -40,13 +35,15 @@ class MyAppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authStatus = context.select((SignInBloc bloc) => bloc.state.status);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Harmonia App',
       theme: appLightTheme,
       darkTheme: appDarkTheme,
       themeMode: ThemeMode.light,
-      home: const SignInPage(),
+      home: authStatus.page,
     );
   }
 }
@@ -56,6 +53,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Placeholder());
+    final user = context.select((SignInBloc bloc) => bloc.state.user);
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Hey Harmonia Social'),
+            Text(user.email),
+            const SizedBox(height: 40),
+            const SignOutButton()
+          ],
+        ),
+      ),
+    );
   }
 }

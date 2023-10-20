@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harmonia/features/auth/presentation/sign_in_bloc/sign_in_bloc.dart';
+import 'package:harmonia/core/validators/validators.dart';
 import '../pages/sign_up_page.dart';
 import 'auth_button.dart';
 import 'auth_toggle_button.dart';
@@ -37,24 +39,55 @@ class _SignInFormState extends State<SignInForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          EmailTextField(
-            _emailController,
-            onChanged: (email) {},
-            fieldFocusNode: (
-              currentNode: _emailFocus,
-              nextNode: _passwordFocus
-            ),
+          BlocBuilder<SignInBloc, SignInState>(
+            buildWhen: (previous, current) => current.email != previous.email,
+            builder: (context, state) {
+              return EmailTextField(
+                _emailController,
+                onChanged: (email) => context.read<SignInBloc>().add(
+                      SignInEmailChanged(email: email),
+                    ),
+                fieldFocusNode: (
+                  currentNode: _emailFocus,
+                  nextNode: _passwordFocus
+                ),
+                errorText: state.email.displayError?.message,
+              );
+            },
           ),
           const SizedBox(height: 20),
-          PasswordTextField(
-            _passwordController,
-            hintText: 'Password',
-            onChanged: (password) {},
-            suffixOnPressed: () {},
-            fieldFocusNode: (currentNode: _passwordFocus, nextNode: null),
+          BlocBuilder<SignInBloc, SignInState>(
+            buildWhen: (previous, current) =>
+                current.isObscurePassword != previous.isObscurePassword,
+            builder: (context, state) {
+              return PasswordTextField(
+                _passwordController,
+                hintText: 'Password',
+                isObscure: state.isObscurePassword,
+                onChanged: (password) => context.read<SignInBloc>().add(
+                      SignInPasswordChanged(password: password),
+                    ),
+                suffixOnPressed: () => context.read<SignInBloc>().add(
+                      const SignInObscureToggled(),
+                    ),
+                fieldFocusNode: (currentNode: _passwordFocus, nextNode: null),
+              );
+            },
           ),
           const SizedBox(height: 40),
-          AuthButton(onPressed: () {}, text: 'Sign In'),
+          AuthButton(
+              onPressed: () {
+                _emailFocus.unfocus();
+                _passwordFocus.unfocus();
+
+                context.read<SignInBloc>().add(
+                      SignInFormSubmitted(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ),
+                    );
+              },
+              text: 'Sign In'),
           AuthToggleButton(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(

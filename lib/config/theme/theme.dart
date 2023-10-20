@@ -6,6 +6,7 @@ const darkBackgroundColor = Color(0xff201919);
 const primaryColor = Color(0xffbf564c);
 const accentColor = Color(0xffa13e38);
 const overlayColor = Color(0xffe5675b);
+const appBarBackgroundColor = Color(0xfffbeded);
 
 final appLightTheme = ThemeData(
   fontFamily: 'Poppins',
@@ -14,6 +15,7 @@ final appLightTheme = ThemeData(
     primary: primaryColor,
     seedColor: primaryColor,
   ),
+  appBarTheme: const AppBarTheme(backgroundColor: appBarBackgroundColor),
   textTheme: const TextTheme(
     headlineMedium: TextStyle(color: Color(0xffa13e38)),
     titleLarge: TextStyle(color: Color(0xff775651)),
