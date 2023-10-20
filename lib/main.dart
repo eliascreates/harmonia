@@ -59,9 +59,10 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Hey Harmonia Social'),
+            const Text('Hello Harmonia, You wanna share'),
+            const SizedBox(height: 10),
             Text(user.email),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             const SignOutButton()
           ],
         ),

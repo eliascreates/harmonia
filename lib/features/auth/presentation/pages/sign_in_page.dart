@@ -32,22 +32,33 @@ class SignInView extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.colorScheme.surfaceVariant.withOpacity(0.5),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AppLogo(),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text('Sign In', style: textTheme.headlineMedium),
+      appBar: AppBar(),
+      body: BlocBuilder<SignInBloc, SignInState>(
+        builder: (context, state) {
+          if (state.status == AuthStatus.loading) {
+            return const Center(
+              child: SizedBox.square(
+                dimension: 50.0,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const AppLogo(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Text('Sign In', style: textTheme.headlineMedium),
+                ),
+                const SizedBox(height: 50),
+                const SignInForm(),
+              ],
             ),
-            const SizedBox(height: 50),
-            const SignInForm(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
