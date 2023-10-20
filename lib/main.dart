@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Harmonia App',
       theme: ThemeData(
         fontFamily: 'Poppins',
         colorScheme: ColorScheme.fromSeed(
@@ -20,9 +20,43 @@ class MyApp extends StatelessWidget {
           primary: const Color(0xffbf564c),
           seedColor: const Color(0xffbf564c),
         ),
+        textTheme: const TextTheme(
+          headlineMedium: TextStyle(color: Color(0xffa13e38)),
+          titleLarge: TextStyle(color: Color(0xff775651)),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+            ),
+            foregroundColor: const MaterialStatePropertyAll(Colors.white),
+            backgroundColor: const MaterialStatePropertyAll(Color(0xffbf564c)),
+            overlayColor: const MaterialStatePropertyAll(Color(0xffe5675b)),
+          ),
+        ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      darkTheme: ThemeData(
+        fontFamily: 'Poppins',
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          primary: const Color(0xffbf564c),
+          seedColor: const Color(0xffbf564c),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+            ),
+            foregroundColor: const MaterialStatePropertyAll(Colors.white),
+            backgroundColor: const MaterialStatePropertyAll(Color(0xffbf564c)),
+            overlayColor: const MaterialStatePropertyAll(Color(0xffe5675b)),
+          ),
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.light,
+      home: const SignInPage(),
     );
   }
 }
