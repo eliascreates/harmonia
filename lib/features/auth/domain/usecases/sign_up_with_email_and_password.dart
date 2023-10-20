@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+
 import 'package:harmonia/core/errors/errors.dart';
 import 'package:harmonia/core/usecase/usecase.dart';
 import 'package:harmonia/features/auth/domain/entities/user.dart';
