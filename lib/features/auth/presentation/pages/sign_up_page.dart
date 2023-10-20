@@ -6,8 +6,9 @@ class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SignInView(),
+    return Scaffold(
+      appBar: AppBar(),
+      body: const SignInView(),
     );
   }
 }
@@ -28,9 +29,7 @@ class SignInView extends StatelessWidget {
             padding: const EdgeInsets.only(left: 20.0),
             child: Text('Sign In', style: textTheme.headlineMedium),
           ),
-          const SizedBox(
-            height: 50,
-          ),
+          const SizedBox(height: 50),
           const SignUpForm(),
         ],
       ),

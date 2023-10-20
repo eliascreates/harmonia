@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1013327800337",
+    "project_id": "harmonia-31e51",
+    "storage_bucket": "harmonia-31e51.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013327800337:android:bd8d8d8d4e34d9eb0fa9b0",
+        "android_client_info": {
+          "package_name": "com.example.harmonia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAofjYKNVUU19GVe2ED0-OW9qvDZhnS_2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
