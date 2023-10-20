@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserModel extends Equatable {
   final String uid;
@@ -34,6 +36,16 @@ class UserModel extends Equatable {
     following: [],
     posts: [],
   );
+
+  factory UserModel.fromFirebase(User? firebaseUser) {
+    if (firebaseUser == null) return UserModel.empty;
+    return UserModel.empty.copyWith(
+      uid: firebaseUser.uid,
+      displayName: firebaseUser.displayName ?? '',
+      email: firebaseUser.email ?? '',
+      imageUrl: firebaseUser.photoURL ?? '',
+    );
+  }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -75,4 +87,28 @@ class UserModel extends Equatable {
         following,
         posts,
       ];
+
+  UserModel copyWith({
+    String? uid,
+    String? displayName,
+    String? biography,
+    String? email,
+    String? imageUrl,
+    String? username,
+    List<String>? followers,
+    List<String>? following,
+    List<String>? posts,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      displayName: displayName ?? this.displayName,
+      biography: biography ?? this.biography,
+      email: email ?? this.email,
+      imageUrl: imageUrl ?? this.imageUrl,
+      username: username ?? this.username,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
+      posts: posts ?? this.posts,
+    );
+  }
 }
