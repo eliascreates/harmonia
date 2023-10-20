@@ -13,9 +13,6 @@ abstract class AuthRepository {
 
   /// Sign in a user with the provided email and password.
   /// 
-  /// - [email]: The user's email address.
-  /// - [password]: The user's password.
-  /// 
   /// Returns a [User] if the sign-in is successful, or a [Failure] if there's an error.
   Future<Either<Failure, User>> signInWithEmailAndPassword({
     required String email,
@@ -23,9 +20,6 @@ abstract class AuthRepository {
   });
 
   /// Sign up a new user with the provided email and password.
-  /// 
-  /// - [email]: The user's email address.
-  /// - [password]: The user's password.
   /// 
   /// Returns a [User] if the sign-up is successful, or a [Failure] if there's an error.
   Future<Either<Failure, User>> signUpWithEmailAndPassword({
