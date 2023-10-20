@@ -1,3 +1,4 @@
+import 'package:harmonia/core/errors/auth_exceptions.dart';
 import 'package:harmonia/features/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -24,9 +25,9 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
 
   @override
   Stream<UserModel> get authStateChanges {
-    return firebaseAuth.authStateChanges().map((user) {
-      if (user == null) return UserModel.empty;
-      return UserModel.fromFirebase(user);
+    return firebaseAuth.authStateChanges().map((firebaseUser) {
+      if (firebaseUser == null) return UserModel.empty;
+      return UserModel.fromFirebase(firebaseUser);
     });
   }
 
@@ -34,23 +35,59 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
   Future<UserModel> signInWithEmailAndPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement signInWithEmailAndPassword
-    throw UnimplementedError();
-  }
+  }) async {
+    try {
+      final UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-  @override
-  Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+      return UserModel.fromFirebase(userCredential.user);
+    } catch (e) {
+      throw _handleAuthException(e);
+    }
   }
 
   @override
   Future<UserModel> signUpWithEmailAndPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement signUpWithEmailAndPassword
-    throw UnimplementedError();
+  }) async {
+    try {
+      final UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      return UserModel.fromFirebase(userCredential.user);
+    } catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    await firebaseAuth.signOut();
+  }
+
+  Exception _handleAuthException(dynamic e) {
+    if (e is FirebaseAuthException) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          return EmailAlreadyInUseException();
+        case 'invalid-email':
+        case 'user-not-found':
+        case 'wrong-password':
+          return InvalidEmailOrPasswordException();
+        case 'weak-password':
+          return WeakPasswordException();
+        case 'too-many-requests':
+        default:
+          return UnexpectedAuthException();
+      }
+    }
+    return UnexpectedAuthException();
   }
 }
