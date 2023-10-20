@@ -7,23 +7,20 @@ class AppLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    return Padding(
-      padding: const EdgeInsets.only(top: 40),
-      child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(Icons.android, size: 200, color: theme.colorScheme.secondary),
-            Positioned(
-              top: 20,
-              child: Text(
-                '- Harmonia -',
-                style: textTheme.titleLarge
-                    ?.copyWith(color: theme.colorScheme.secondary),
-              ),
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Icon(Icons.android, size: 200, color: theme.colorScheme.secondary),
+          Positioned(
+            top: 20,
+            child: Text(
+              '- Harmonia -',
+              style: textTheme.titleLarge
+                  ?.copyWith(color: theme.colorScheme.secondary),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -26,7 +26,9 @@ class PasswordTextField extends StatelessWidget {
       key: const Key('authForm_passwordTextField_textField'),
       controller: passwordController,
       onChanged: onChanged,
-      onEditingComplete: () => fieldFocusNode.currentNode.unfocus(),
+      onEditingComplete: fieldFocusNode.nextNode == null
+          ? () => fieldFocusNode.currentNode.unfocus()
+          : () => FocusScope.of(context).requestFocus(fieldFocusNode.nextNode),
       focusNode: fieldFocusNode.currentNode,
       keyboardType: TextInputType.text,
       obscureText: isObscure,
@@ -50,6 +52,7 @@ class PasswordTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0),
           borderSide: const BorderSide(color: Colors.grey),
         ),
+        errorStyle: const TextStyle(fontSize: 10),
         errorText: errorText,
       ),
     );

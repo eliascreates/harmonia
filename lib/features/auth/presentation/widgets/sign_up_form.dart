@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:harmonia/core/validators/validators.dart';
+
+import '../sign_up_bloc/sign_up_bloc.dart';
 import 'auth_button.dart';
 import 'auth_toggle_button.dart';
 import 'email_text_field.dart';
@@ -39,35 +43,81 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          EmailTextField(
-            _emailController,
-            onChanged: (email) {},
-            fieldFocusNode: (
-              currentNode: _emailFocus,
-              nextNode: _passwordFocus
-            ),
+          BlocBuilder<SignUpBloc, SignUpState>(
+            buildWhen: (previous, current) => current.email != previous.email,
+            builder: (context, state) {
+              return EmailTextField(
+                _emailController,
+                onChanged: (email) => context.read<SignUpBloc>().add(
+                      SignUpEmailChanged(email: email),
+                    ),
+                fieldFocusNode: (
+                  currentNode: _emailFocus,
+                  nextNode: _passwordFocus
+                ),
+                errorText: state.email.displayError?.message,
+              );
+            },
           ),
           const SizedBox(height: 20),
-          PasswordTextField(
-            _passwordController,
-            suffixOnPressed: () {},
-            onChanged: (password) {},
-            hintText: 'Password',
-            fieldFocusNode: (currentNode: _passwordFocus, nextNode: null),
+          BlocBuilder<SignUpBloc, SignUpState>(
+            builder: (context, state) {
+              return PasswordTextField(
+                _passwordController,
+                hintText: 'Password',
+                onChanged: (password) => context.read<SignUpBloc>().add(
+                      SignUpPasswordChanged(password: password),
+                    ),
+                suffixOnPressed: () => context.read<SignUpBloc>().add(
+                      const SignUpPasswordObscureToggled(),
+                    ),
+                fieldFocusNode: (
+                  currentNode: _passwordFocus,
+                  nextNode: _confirmPasswordFocus
+                ),
+                isObscure: state.isPasswordObscure,
+                errorText: state.password.displayError?.message,
+              );
+            },
           ),
           const SizedBox(height: 20),
-          PasswordTextField(
-            _confirmPasswordController,
-            suffixOnPressed: () {},
-            onChanged: (confirmPassword) {},
-            hintText: 'Confirm Password',
-            fieldFocusNode: (
-              currentNode: _confirmPasswordFocus,
-              nextNode: null
-            ),
+          BlocBuilder<SignUpBloc, SignUpState>(
+            builder: (context, state) {
+              return PasswordTextField(
+                _confirmPasswordController,
+                hintText: 'Confirm Password',
+                suffixOnPressed: () => context.read<SignUpBloc>().add(
+                      const SignUpConfirmPasswordObscureToggled(),
+                    ),
+                onChanged: (confirmPassword) => context.read<SignUpBloc>().add(
+                      SignUpConfirmPasswordChanged(
+                        confirmPassword: confirmPassword,
+                      ),
+                    ),
+                fieldFocusNode: (
+                  currentNode: _confirmPasswordFocus,
+                  nextNode: null
+                ),
+                isObscure: state.isConfirmPasswordObscure,
+                errorText: state.confirmPassword.displayError?.message,
+              );
+            },
           ),
           const SizedBox(height: 25),
-          AuthButton(onPressed: () {}, text: 'Sign In'),
+          AuthButton(
+              onPressed: () {
+                _emailFocus.unfocus();
+                _passwordFocus.unfocus();
+                _confirmPasswordFocus.unfocus();
+
+                context.read<SignUpBloc>().add(
+                      SignUpFormSubmitted(
+                        email: _emailController.text,
+                        password: _confirmPasswordController.text,
+                      ),
+                    );
+              },
+              text: 'Sign Up'),
           AuthToggleButton(
             onPressed: () => Navigator.of(context).pop(),
             question: "Have an account?",

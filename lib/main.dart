@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harmonia/config/theme/theme.dart';
+import 'package:harmonia/core/extensions/extensions.dart';
 
-import 'features/auth/presentation/pages/sign_in_page.dart';
+import 'features/auth/auth.dart';
+import 'service_locator.dart' as di;
 
-void main() {
+Future<void> main() async {
+  await di.init();
   runApp(const MyApp());
 }
 
@@ -11,52 +16,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SignInBloc(
+              signInWithEmailAndPassword: di.sl<SignInWithEmailAndPassword>(),
+              signOut: di.sl<SignOut>(),
+              authRepository: di.sl<AuthRepository>()),
+        ),
+      ],
+      child: const MyAppView(),
+    );
+  }
+}
+
+class MyAppView extends StatelessWidget {
+  const MyAppView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authStatus = context.select((SignInBloc bloc) => bloc.state.status);
+
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Harmonia App',
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.light,
-          primary: const Color(0xffbf564c),
-          seedColor: const Color(0xffbf564c),
-        ),
-        textTheme: const TextTheme(
-          headlineMedium: TextStyle(color: Color(0xffa13e38)),
-          titleLarge: TextStyle(color: Color(0xff775651)),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-            ),
-            foregroundColor: const MaterialStatePropertyAll(Colors.white),
-            backgroundColor: const MaterialStatePropertyAll(Color(0xffbf564c)),
-            overlayColor: const MaterialStatePropertyAll(Color(0xffe5675b)),
-          ),
-        ),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          primary: const Color(0xffbf564c),
-          seedColor: const Color(0xffbf564c),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-            ),
-            foregroundColor: const MaterialStatePropertyAll(Colors.white),
-            backgroundColor: const MaterialStatePropertyAll(Color(0xffbf564c)),
-            overlayColor: const MaterialStatePropertyAll(Color(0xffe5675b)),
-          ),
-        ),
-        useMaterial3: true,
-      ),
+      theme: appLightTheme,
+      darkTheme: appDarkTheme,
       themeMode: ThemeMode.light,
-      home: const SignInPage(),
+      home: authStatus.page,
     );
   }
 }
@@ -66,6 +53,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Placeholder());
+    final user = context.select((SignInBloc bloc) => bloc.state.user);
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Hello Harmonia, You wanna share'),
+            const SizedBox(height: 10),
+            Text(user.email),
+            const SizedBox(height: 30),
+            const SignOutButton()
+          ],
+        ),
+      ),
+    );
   }
 }
