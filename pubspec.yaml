@@ -48,6 +48,8 @@ dependencies:
   flutter_blurhash: ^0.7.0
   dartz: ^0.10.1
   formz: ^0.6.1
+  hydrated_bloc: ^9.1.2
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
