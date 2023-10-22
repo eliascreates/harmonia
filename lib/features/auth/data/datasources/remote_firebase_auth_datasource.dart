@@ -7,13 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// responsible for managing user authentication, including sign-in, sign-up, and sign-out operations.
 abstract class RemoteFirebaseAuthDataSource {
   /// A stream that emits changes in the user's authentication state.
-  /// 
+  ///
   /// It provides a continuous stream of [UserModel] objects, reflecting the current
   /// user's state, which updates whenever the user's authentication status changes.
   Stream<UserModel> get authStateChanges;
 
   /// Sign in a user with the provided email and password.
-  /// 
+  ///
   /// Returns a [UserModel] object representing the signed-in user.
   Future<UserModel> signInWithEmailAndPassword({
     required String email,
@@ -21,7 +21,7 @@ abstract class RemoteFirebaseAuthDataSource {
   });
 
   /// Sign up a new user with the provided email and password.
-  /// 
+  ///
   /// Returns a [UserModel] object representing the newly registered user.
   Future<UserModel> signUpWithEmailAndPassword({
     required String email,
@@ -29,7 +29,7 @@ abstract class RemoteFirebaseAuthDataSource {
   });
 
   /// Sign out the currently authenticated user.
-  /// 
+  ///
   /// This method signs out the user currently authenticated in the application.
   /// It does not return a value, as the result of the operation is considered void.
   Future<void> signOut();
@@ -94,10 +94,10 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
       switch (e.code) {
         case 'email-already-in-use':
           return EmailAlreadyInUseException();
-        case 'invalid-email':
-        case 'user-not-found':
-        case 'wrong-password':
+        case 'INVALID_LOGIN_CREDENTIALS':
           return InvalidEmailOrPasswordException();
+        case 'network-request-failed':
+          return NetworkRequestFailedException();
         case 'weak-password':
           return WeakPasswordException();
         case 'too-many-requests':
@@ -105,6 +105,7 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
           return UnexpectedAuthException();
       }
     }
+
     return UnexpectedAuthException();
   }
 }
