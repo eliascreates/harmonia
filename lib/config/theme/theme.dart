@@ -6,8 +6,11 @@ const darkBackgroundColor = Color(0xff201919);
 const primaryColor = Color(0xffbf564c);
 const accentColor = Color(0xffa13e38);
 const overlayColor = Color(0xffe5675b);
-const appBarBackgroundColor = Color(0xfffbeded);
+const lightAppBarBackgroundColor = Color(0xfff8ecf0);
+const darkAppBarBackgroundColor = Color(0xff312525);
 const tertiaryColor = Color(0xff715a2e);
+
+const poppinsFont = 'Poppins';
 
 final tooltipTheme = TooltipThemeData(
   decoration: BoxDecoration(
@@ -16,25 +19,25 @@ final tooltipTheme = TooltipThemeData(
   ),
 );
 final elevatedButtonTheme = ElevatedButtonThemeData(
-    style: ButtonStyle(
-      shape: MaterialStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      ),
-      foregroundColor: const MaterialStatePropertyAll(Colors.white),
-      backgroundColor: const MaterialStatePropertyAll(primaryColor),
-      overlayColor: const MaterialStatePropertyAll(overlayColor),
+  style: ButtonStyle(
+    shape: MaterialStatePropertyAll(
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
     ),
-  );
+    foregroundColor: const MaterialStatePropertyAll(Colors.white),
+    backgroundColor: const MaterialStatePropertyAll(primaryColor),
+    overlayColor: const MaterialStatePropertyAll(overlayColor),
+  ),
+);
 
 final appLightTheme = ThemeData(
-  fontFamily: 'Poppins',
+  fontFamily: poppinsFont,
+  appBarTheme: const AppBarTheme(backgroundColor: lightAppBarBackgroundColor),
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.light,
     primary: primaryColor,
     seedColor: primaryColor,
   ),
   tooltipTheme: tooltipTheme,
-  appBarTheme: const AppBarTheme(backgroundColor: appBarBackgroundColor),
   textTheme: const TextTheme(
     headlineMedium: TextStyle(color: Color(0xffa13e38)),
     titleLarge: TextStyle(color: Color(0xff775651)),
@@ -44,7 +47,8 @@ final appLightTheme = ThemeData(
 );
 
 final appDarkTheme = ThemeData(
-  fontFamily: 'Poppins',
+  fontFamily: poppinsFont,
+  appBarTheme: const AppBarTheme(backgroundColor: darkAppBarBackgroundColor),
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
     primary: primaryColor,
