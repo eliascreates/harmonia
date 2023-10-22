@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:harmonia/features/auth/auth.dart';
-import 'package:harmonia/main.dart';
+import 'package:harmonia/features/home/home.dart';
 
 extension AuthStatusX on AuthStatus {
   Widget get page {

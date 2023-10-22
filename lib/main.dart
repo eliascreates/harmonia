@@ -47,26 +47,3 @@ class MyAppView extends StatelessWidget {
     );
   }
 }
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = context.select((SignInBloc bloc) => bloc.state.user);
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Hello Harmonia, You wanna share'),
-            const SizedBox(height: 10),
-            Text(user.email),
-            const SizedBox(height: 30),
-            const SignOutButton()
-          ],
-        ),
-      ),
-    );
-  }
-}
