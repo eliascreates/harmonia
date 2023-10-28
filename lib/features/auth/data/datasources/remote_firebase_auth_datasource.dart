@@ -1,6 +1,7 @@
 import 'package:harmonia/core/errors/auth_exceptions.dart';
 import 'package:harmonia/features/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// The `RemoteFirebaseAuthDataSource` abstract class provides a contract for interacting
 /// with remote Firebase Authentication services. Implementations of this interface are
@@ -37,8 +38,10 @@ abstract class RemoteFirebaseAuthDataSource {
 
 class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firestore;
 
-  RemoteFirebaseAuthDataSourceImpl({required this.firebaseAuth});
+  RemoteFirebaseAuthDataSourceImpl(
+      {required this.firebaseAuth, required this.firestore});
 
   @override
   Stream<UserModel> get authStateChanges {
@@ -60,7 +63,10 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
         password: password,
       );
 
-      return UserModel.fromFirebase(userCredential.user);
+      final user = UserModel.fromFirebase(userCredential.user);
+
+      await firestore.collection('users').doc(user.uid).set(user.toJson());
+      return user;
     } catch (e) {
       throw _handleAuthException(e);
     }
@@ -77,8 +83,11 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
         email: email,
         password: password,
       );
+      final user = UserModel.fromFirebase(userCredential.user).copyWith(
+        timestamp: DateTime.now(),
+      );
 
-      return UserModel.fromFirebase(userCredential.user);
+      return user;
     } catch (e) {
       throw _handleAuthException(e);
     }
@@ -88,6 +97,16 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
   Future<void> signOut() async {
     await firebaseAuth.signOut();
   }
+
+  // Future<void> _createUserInFirebase(UserModel user) async {
+  //   final userRef = firestore.collection('users');
+
+  //   final doc = await userRef.doc(user.uid).get();
+
+  //   if (!doc.exists) {
+  //     userRef.doc(user.uid).set(user.toJson());
+  //   }
+  // }
 
   Exception _handleAuthException(dynamic e) {
     if (e is FirebaseAuthException) {

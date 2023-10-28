@@ -7,9 +7,10 @@ class User extends Equatable {
   final String imageUrl;
   final String biography;
   final String displayName;
-  final List<String> followers;
-  final List<String> following;
-  final List<String> posts;
+  final int followerCount;
+  final int followingCount;
+  final int postCount;
+  final DateTime? timestamp;
 
   const User({
     required this.uid,
@@ -18,9 +19,10 @@ class User extends Equatable {
     required this.imageUrl,
     required this.username,
     required this.biography,
-    required this.followers,
-    required this.following,
-    required this.posts,
+    required this.followerCount,
+    required this.followingCount,
+    required this.postCount,
+    this.timestamp,
   });
 
   static const empty = User(
@@ -30,9 +32,9 @@ class User extends Equatable {
     imageUrl: '',
     username: '',
     biography: '',
-    followers: [],
-    following: [],
-    posts: [],
+    followerCount: 0,
+    followingCount: 0,
+    postCount: 0,
   );
 
   @override
@@ -43,8 +45,9 @@ class User extends Equatable {
         imageUrl,
         username,
         biography,
-        followers,
-        following,
-        posts,
+        followerCount,
+        followingCount,
+        postCount,
+        timestamp,
       ];
 }

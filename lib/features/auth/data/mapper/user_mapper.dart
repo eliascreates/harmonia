@@ -9,9 +9,9 @@ UserModel fromEntity(User entity) {
     imageUrl: entity.imageUrl,
     username: entity.username,
     biography: entity.biography,
-    followers: entity.followers,
-    following: entity.following,
-    posts: entity.posts,
+    followerCount: entity.followerCount,
+    followingCount: entity.followingCount,
+    postCount: entity.postCount,
   );
 }
 
@@ -23,8 +23,8 @@ User toEntity(UserModel model) {
     imageUrl: model.imageUrl,
     username: model.username,
     biography: model.biography,
-    followers: model.followers,
-    following: model.following,
-    posts: model.posts,
+    followerCount: model.followerCount,
+    followingCount: model.followingCount,
+    postCount: model.postCount,
   );
 }

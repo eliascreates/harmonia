@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,7 @@ Future<void> init() async {
 
   //Data sources
   sl.registerLazySingleton<RemoteFirebaseAuthDataSource>(
-    () => RemoteFirebaseAuthDataSourceImpl(firebaseAuth: sl()),
+    () => RemoteFirebaseAuthDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
   );
 
   //Repository
@@ -41,10 +42,14 @@ Future<void> init() async {
 
   //*Firebase
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform, 
   );
+
   final firebaseAuth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
   sl.registerLazySingleton(() => firebaseAuth);
+  sl.registerLazySingleton(() => firestore);
+
   //* Hydrated Bloc
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
