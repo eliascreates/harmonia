@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:harmonia/core/errors/auth_exceptions.dart';
 import 'package:harmonia/features/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,8 +41,10 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
 
-  RemoteFirebaseAuthDataSourceImpl(
-      {required this.firebaseAuth, required this.firestore});
+  RemoteFirebaseAuthDataSourceImpl({
+    required this.firebaseAuth,
+    required this.firestore,
+  });
 
   @override
   Stream<UserModel> get authStateChanges {
@@ -63,10 +66,7 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
         password: password,
       );
 
-      final user = UserModel.fromFirebase(userCredential.user);
-
-      await firestore.collection('users').doc(user.uid).set(user.toJson());
-      return user;
+      return UserModel.fromFirebase(userCredential.user);
     } catch (e) {
       throw _handleAuthException(e);
     }
@@ -83,9 +83,11 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
         email: email,
         password: password,
       );
-      final user = UserModel.fromFirebase(userCredential.user).copyWith(
+      final firebaseUser = UserModel.fromFirebase(userCredential.user).copyWith(
         timestamp: DateTime.now(),
       );
+
+      final user = await _createUserInFirebase(firebaseUser);
 
       return user;
     } catch (e) {
@@ -98,18 +100,25 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
     await firebaseAuth.signOut();
   }
 
-  // Future<void> _createUserInFirebase(UserModel user) async {
-  //   final userRef = firestore.collection('users');
+  Future<UserModel> _createUserInFirebase(UserModel user) async {
+    final userRef = firestore.collection('users');
+    try {
+      await userRef.doc(user.uid).set(
+            user.toJson(),
+            SetOptions(mergeFields: ['email']),
+          );
 
-  //   final doc = await userRef.doc(user.uid).get();
+      final doc = await userRef.doc(user.uid).get();
 
-  //   if (!doc.exists) {
-  //     userRef.doc(user.uid).set(user.toJson());
-  //   }
-  // }
+      return UserModel.fromJson(doc.data() as Map<String, dynamic>);
+    } catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
 
   Exception _handleAuthException(dynamic e) {
     if (e is FirebaseAuthException) {
+      debugPrint('New Error - Error Code: ${e.code} - Message: ${e.message}');
       switch (e.code) {
         case 'email-already-in-use':
           return EmailAlreadyInUseException();
@@ -128,3 +137,10 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
     return UnexpectedAuthException();
   }
 }
+
+
+    //* Only when user does not have document for some reason
+    // await firestore
+    //     .collection('users')
+    //     .doc(user.uid)
+    //     .set(user.toJson(), SetOptions(mergeFields: ['email']));
