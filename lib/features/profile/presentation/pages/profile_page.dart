@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:harmonia/features/auth/auth.dart'
-    show SignInBloc, SignOutButton;
+// import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harmonia/features/settings/presentation/pages/settings_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((SignInBloc bloc) => bloc.state.user);
 
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Hello Harmonia, You wanna share'),
-          const SizedBox(height: 10),
-          Text(user.email),
-          const SizedBox(height: 30),
-          const SignOutButton()
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.primary, size: 27),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              ),
+            ),
+            icon: const Icon(Icons.settings_rounded),
+          ),
+          const SizedBox(width: 10),
         ],
+      ),
+      body: const Center(
+        child: Text('Profile Page'),
       ),
     );
   }

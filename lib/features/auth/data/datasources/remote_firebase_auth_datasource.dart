@@ -103,10 +103,7 @@ class RemoteFirebaseAuthDataSourceImpl implements RemoteFirebaseAuthDataSource {
   Future<UserModel> _createUserInFirebase(UserModel user) async {
     final userRef = firestore.collection('users');
     try {
-      await userRef.doc(user.uid).set(
-            user.toJson(),
-            SetOptions(mergeFields: ['email']),
-          );
+      await userRef.doc(user.uid).set(user.toJson());
 
       final doc = await userRef.doc(user.uid).get();
 

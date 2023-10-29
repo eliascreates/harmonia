@@ -53,6 +53,9 @@ class SignUpView extends StatelessWidget {
     final textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading:
+            context.select((SignUpBloc bloc) => bloc.state.status) !=
+                SignUpStatus.loading,
         centerTitle: true,
         title: Text(
           '- Harmonia -',
