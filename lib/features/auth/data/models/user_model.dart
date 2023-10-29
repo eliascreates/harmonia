@@ -59,7 +59,7 @@ class UserModel extends Equatable {
       followerCount: json['followerCount'] as int,
       followingCount: json['followingCount'] as int,
       postCount: json['postCount'] as int,
-      timestamp: json['timestamp'] as DateTime?,
+      timestamp: json['timestamp'].toDate() ?? DateTime.now(),
     );
   }
 

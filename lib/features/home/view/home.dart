@@ -27,6 +27,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentIndex = context.select((HomeCubit cubit) => cubit.state).index;
+    
     final theme = Theme.of(context);
 
     return Scaffold(

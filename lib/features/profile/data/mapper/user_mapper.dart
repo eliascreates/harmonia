@@ -13,6 +13,7 @@ UserModel fromEntity(User entity) {
     followerCount: entity.followerCount,
     followingCount: entity.followingCount,
     postCount: entity.postCount,
+    timestamp: entity.timestamp,
   );
 }
 
@@ -27,5 +28,6 @@ User toEntity(UserModel model) {
     followerCount: model.followerCount,
     followingCount: model.followingCount,
     postCount: model.postCount,
+    timestamp: model.timestamp,
   );
 }

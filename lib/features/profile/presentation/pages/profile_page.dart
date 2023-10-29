@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harmonia/features/auth/auth.dart';
+import '../../domain/domain.dart';
+import '../cubit/profile_cubit.dart';
 import 'package:harmonia/features/settings/presentation/pages/settings_page.dart';
+import 'package:harmonia/service_locator.dart' as di;
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((SignInBloc bloc) => bloc.state.user);
+    debugPrint('XXXXXXXXXXXXXXXXXXXXX${user.email} - id: ${user.uid}');
+    return BlocProvider(
+      create: (context) => ProfileCubit(
+        getUserById: di.sl<GetUserById>(),
+      )..init(userId: user.uid),
+      child: const ProfileView(),
+    );
+  }
+}
+
+class ProfileView extends StatelessWidget {
+  const ProfileView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = context.select((ProfileCubit cubit) => cubit.state.user);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -23,12 +45,16 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(width: 10),
         ],
       ),
-      body: const Column(
+      body: Column(
         children: [
-          SizedBox(height: 20),
-          Padding(
+          const SizedBox(height: 20),
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: ProfileSection(),
+          ),
+          Text(
+            user.displayName.toUpperCase(),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),
