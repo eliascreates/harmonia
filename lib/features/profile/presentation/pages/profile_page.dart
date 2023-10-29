@@ -12,7 +12,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.select((SignInBloc bloc) => bloc.state.user);
-    debugPrint('XXXXXXXXXXXXXXXXXXXXX${user.email} - id: ${user.uid}');
     return BlocProvider(
       create: (context) => ProfileCubit(
         getUserById: di.sl<GetUserById>(),
@@ -48,9 +47,13 @@ class ProfileView extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ProfileSection(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ProfileSection(
+              imageUrl: user.imageUrl,
+              followerCount: user.followerCount.toString(),
+              followingCount: user.followingCount.toString(),
+            ),
           ),
           Text(
             user.displayName.toUpperCase(),
@@ -63,7 +66,15 @@ class ProfileView extends StatelessWidget {
 }
 
 class ProfileSection extends StatelessWidget {
-  const ProfileSection({super.key});
+  const ProfileSection({
+    super.key,
+    required this.followingCount,
+    required this.followerCount,
+    required this.imageUrl,
+  });
+  final String followingCount;
+  final String followerCount;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +87,7 @@ class ProfileSection extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('4658', style: theme.textTheme.bodyLarge),
+              Text(followerCount, style: theme.textTheme.bodyLarge),
               const Text('Followers'),
             ],
           ),
@@ -85,10 +96,12 @@ class ProfileSection extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 50,
                   backgroundImage:
-                      AssetImage('assets/images/profile_image.jpeg'),
+                      const AssetImage('assets/images/profile_image.jpeg'),
+                  foregroundImage:
+                      imageUrl.isEmpty ? null : NetworkImage(imageUrl),
                 ),
                 Positioned.fill(
                   child: Transform.flip(
@@ -106,7 +119,9 @@ class ProfileSection extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FittedBox(child: Text('3138', style: theme.textTheme.bodyLarge)),
+              FittedBox(
+                child: Text(followingCount, style: theme.textTheme.bodyLarge),
+              ),
               const Text('Following'),
             ],
           ),
