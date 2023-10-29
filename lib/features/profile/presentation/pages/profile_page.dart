@@ -7,7 +7,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -24,8 +23,68 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(width: 10),
         ],
       ),
-      body: const Center(
-        child: Text('Profile Page'),
+      body: const Column(
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ProfileSection(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileSection extends StatelessWidget {
+  const ProfileSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('4658', style: theme.textTheme.bodyLarge),
+              const Text('Followers'),
+            ],
+          ),
+          SizedBox.square(
+            dimension: 115,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundImage:
+                      AssetImage('assets/images/profile_image.jpeg'),
+                ),
+                Positioned.fill(
+                  child: Transform.flip(
+                    flipX: true,
+                    child: CircularProgressIndicator(
+                      value: 0.8,
+                      color: theme.colorScheme.primaryContainer,
+                      strokeWidth: 2.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FittedBox(child: Text('3138', style: theme.textTheme.bodyLarge)),
+              const Text('Following'),
+            ],
+          ),
+        ],
       ),
     );
   }
