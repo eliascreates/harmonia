@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:harmonia/features/auth/auth.dart';
-// import 'package:harmonia/features/theme/theme.dart';
-// import 'package:url_launcher/url_launcher_string.dart';
+import 'package:harmonia/features/theme/theme.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -44,7 +43,7 @@ class SettingsView extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Elijoy',
+                      user.displayName,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
@@ -62,31 +61,10 @@ class SettingsView extends StatelessWidget {
             ),
           ),
           const SettingHeader('Preferences'),
-          Card(
+          const Card(
             elevation: 2,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: SwitchListTile(
-              onChanged: (_) {},
-              value: true,
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              title: const Text('Light Theme'),
-              secondary: const AnimatedRotation(
-                turns: true ? 1 : 0,
-                duration: Duration(milliseconds: 1200),
-                child: AnimatedCrossFade(
-                  firstChild: Icon(Icons.light_mode),
-                  secondChild: Icon(Icons.dark_mode),
-                  firstCurve: Curves.easeInOutSine,
-                  secondCurve: Curves.easeInOutSine,
-                  crossFadeState: true
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                  duration: Duration(milliseconds: 1100),
-                ),
-              ),
-            ),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: ThemeToggle(),
           ),
           const SettingHeader('About'),
           SettingLinkTile(
