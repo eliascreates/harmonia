@@ -1,5 +1,3 @@
-//Dark Mode canvas color = ff201919
-
 import 'package:flutter/material.dart';
 
 const darkBackgroundColor = Color(0xff201919);
@@ -29,6 +27,14 @@ final elevatedButtonTheme = ElevatedButtonThemeData(
   ),
 );
 
+final outlineButtonTheme = OutlinedButtonThemeData(
+  style: ButtonStyle(
+    shape: MaterialStatePropertyAll(
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+    ),
+  ),
+);
+
 final appLightTheme = ThemeData(
   fontFamily: poppinsFont,
   appBarTheme: const AppBarTheme(backgroundColor: lightAppBarBackgroundColor),
@@ -43,6 +49,7 @@ final appLightTheme = ThemeData(
     titleLarge: TextStyle(color: Color(0xff775651)),
   ),
   elevatedButtonTheme: elevatedButtonTheme,
+  outlinedButtonTheme: outlineButtonTheme,
   useMaterial3: true,
 );
 
@@ -56,5 +63,6 @@ final appDarkTheme = ThemeData(
   ),
   tooltipTheme: tooltipTheme,
   elevatedButtonTheme: elevatedButtonTheme,
+  outlinedButtonTheme: outlineButtonTheme,
   useMaterial3: true,
 );

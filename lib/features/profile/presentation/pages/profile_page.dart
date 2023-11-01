@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harmonia/core/constants/constants.dart';
 import 'package:harmonia/features/auth/auth.dart';
 import '../../domain/domain.dart';
 import '../cubit/profile_cubit.dart';
@@ -34,9 +35,10 @@ class ProfileView extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary, size: 27),
         actions: [
           IconButton(
+            tooltip: 'Settings',
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const SettingsPage(),
+                builder: (context) => SettingsPage(user: user),
               ),
             ),
             icon: const Icon(Icons.settings_rounded),
@@ -55,12 +57,68 @@ class ProfileView extends StatelessWidget {
               followingCount: user.followingCount.toString(),
             ),
           ),
-          Text(
-            user.displayName.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              user.displayName.toUpperCase(),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ProfileBiography(bioText: user.biography),
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                OutlinedButton(onPressed: () {}, child: const Text('+ Follow')),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Message'),
+                ),
+              ],
+            ),
+          )
         ],
       ),
+    );
+  }
+}
+
+class ProfileBiography extends StatelessWidget {
+  const ProfileBiography({super.key, required this.bioText});
+
+  final String bioText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            decoration: const BoxDecoration(
+              border: Border.symmetric(
+                vertical: BorderSide(
+                  color: Colors.grey,
+                  width: 0.7,
+                ),
+              ),
+            ),
+            child: Text(
+              bioText,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
+              style: TextStyle(
+                  color: Theme.of(context).unselectedWidgetColor, fontSize: 12),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -79,6 +137,9 @@ class ProfileSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final networkImage = imageUrl.isEmpty ? null : NetworkImage(imageUrl);
+
     return Container(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -98,10 +159,8 @@ class ProfileSection extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage:
-                      const AssetImage('assets/images/profile_image.jpeg'),
-                  foregroundImage:
-                      imageUrl.isEmpty ? null : NetworkImage(imageUrl),
+                  backgroundImage: const AssetImage(defaultProfileImageSrc),
+                  foregroundImage: networkImage,
                 ),
                 Positioned.fill(
                   child: Transform.flip(
