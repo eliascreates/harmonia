@@ -8,23 +8,28 @@ import 'package:harmonia/features/settings/presentation/pages/settings_page.dart
 import 'package:harmonia/service_locator.dart' as di;
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.profileId});
+  final String profileId;
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((SignInBloc bloc) => bloc.state.user);
+    final currentUserId = context.select(
+      (SignInBloc bloc) => bloc.state.user.uid,
+    );
+    final bool isCurrentUser = currentUserId == profileId;
+
     return BlocProvider(
       create: (context) => ProfileCubit(
         getUserById: di.sl<GetUserById>(),
-      )..init(userId: user.uid),
-      child: const ProfileView(),
+      )..init(userId: profileId),
+      child: ProfileView(isCurrentUser: isCurrentUser),
     );
   }
 }
 
 class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
-
+  const ProfileView({super.key, required this.isCurrentUser});
+  final bool isCurrentUser;
   @override
   Widget build(BuildContext context) {
     final user = context.select((ProfileCubit cubit) => cubit.state.user);
@@ -71,19 +76,58 @@ class ProfileView extends StatelessWidget {
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                OutlinedButton(onPressed: () {}, child: const Text('+ Follow')),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Message'),
-                ),
-              ],
-            ),
+            child: ProfileActions(isCurrentUser: isCurrentUser),
           )
         ],
       ),
+    );
+  }
+}
+
+class ProfileActions extends StatelessWidget {
+  const ProfileActions({super.key, required this.isCurrentUser});
+  final bool isCurrentUser;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isCurrentUser) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          OutlinedButton(
+            onPressed: () {},
+            child: const Text('Edit Profile'),
+          ),
+        ],
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        const FollowUnfollowButton(isFollowed: true),
+        OutlinedButton(onPressed: () {}, child: const Text('Message')),
+      ],
+    );
+  }
+}
+
+class FollowUnfollowButton extends StatelessWidget {
+  const FollowUnfollowButton({super.key, required this.isFollowed});
+
+  final bool isFollowed;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isFollowed) {
+      return ElevatedButton(onPressed: () {}, child: const Text('+ Follow'));
+    }
+
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.secondary),
+      child: const Text('Unfollow'),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harmonia/features/auth/auth.dart';
 
 import 'package:harmonia/features/main_feed/main_feed.dart';
 import 'package:harmonia/features/notification/notification.dart';
@@ -27,17 +28,19 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentIndex = context.select((HomeCubit cubit) => cubit.state).index;
-    
+
     final theme = Theme.of(context);
 
     return Scaffold(
       body: IndexedStack(
         index: currentIndex,
-        children: const [
-          MainFeedPage(),
-          SearchPage(),
-          NotificationPage(),
-          ProfilePage(),
+        children: [
+          const MainFeedPage(),
+          const SearchPage(),
+          const NotificationPage(),
+          ProfilePage(
+            profileId: context.select((SignInBloc bloc) => bloc.state.user.uid),
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
