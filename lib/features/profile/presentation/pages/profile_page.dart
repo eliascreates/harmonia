@@ -29,7 +29,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.select((ProfileCubit cubit) => cubit.state.user);
-    List<String> tabs = ['Photos', 'Videos'];
+    List<String> tabs = ['Photos', 'Gifs'];
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +38,7 @@ class ProfileView extends StatelessWidget {
           size: 27,
         ),
         title: Text(
-          '@veggieroot',
+          user.username,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -55,6 +55,7 @@ class ProfileView extends StatelessWidget {
         ],
       ),
       body: NestedScrollView(
+        physics: const BouncingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverList(
@@ -102,7 +103,6 @@ class ProfileView extends StatelessWidget {
             children: [
               TabBar(
                 enableFeedback: true,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
                 tabs: List.generate(
                   tabs.length,
                   (index) => Tab(
@@ -113,8 +113,8 @@ class ProfileView extends StatelessWidget {
               const Expanded(
                 child: TabBarView(
                   children: [
-                    ProfileWindowGallery(),
-                    Center(child: Text('Videos'))
+                    ProfilePhotoGridList(),
+                    ProfileVideoGridList(),
                   ],
                 ),
               )

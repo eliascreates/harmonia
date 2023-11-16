@@ -15,7 +15,7 @@ class RemoteProfileFirestoreDatasourceImpl
   @override
   Stream<UserModel> streamUserDocumentChanges({required String uid}) {
     return firestore.collection('users').doc(uid).snapshots().map((doc) {
-      debugPrint('DATA SOURCE: The uid of beetroot is: $uid');
+      debugPrint('DATA SOURCE: The uid : $uid');
 
       if (doc.exists) {
         debugPrint('DATA SOURCE: ACCOUNT EXISTS');

@@ -2,53 +2,34 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class ProfileWindowGallery extends StatelessWidget {
-  const ProfileWindowGallery({super.key});
+class ProfileVideoGridList extends StatelessWidget {
+  const ProfileVideoGridList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final numbers = [
-      180.0,
-      250.0,
-      170.0,
-      190.0,
-      250.0,
-      180.0,
-      170.0,
-      180.0,
-      190.0,
-      200.0,
-      220.0,
-      230.0,
-      180.0,
-      190.0
-    ];
     final size = MediaQuery.sizeOf(context);
     return MasonryGridView.count(
       padding: const EdgeInsets.all(10.0),
-      itemCount: numbers.length,
+      itemCount: 12,
       mainAxisSpacing: 8,
       crossAxisSpacing: 8,
       crossAxisCount: 2,
       itemBuilder: ((context, index) {
-        final heightImage = numbers[index];
-
-        final widthImage = size.width / 2;
         return GestureDetector(
           onTap: () {},
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Container(
-              height: heightImage,
-              width: widthImage,
+              height: 120,
+              width: size.width / 2,
               color: Theme.of(context).colorScheme.secondary,
               child: CachedNetworkImage(
                 imageUrl:
-                    'https://i.pinimg.com/564x/a1/3f/03/a13f033b04fa966d218a0ffa8bcacbd1.jpg',
+                    'https://i.pinimg.com/originals/e9/93/c5/e993c51e3b971ec3c57ef177d264fa67.gif',
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
-                  width: widthImage,
-                  height: heightImage,
+                  width: size.width / 2,
+                  height: 120,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 errorWidget: (context, url, error) => const Center(
