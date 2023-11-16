@@ -1,11 +1,11 @@
 import 'package:formz/formz.dart';
 
 enum PasswordValidationError {
+  atLeastOneSpecialChar,
   atLeastOneLowercase,
   atLeastOneUppercase,
   atLeastOneDigit,
   minLength,
-  invalidCharacter,
 }
 
 class Password extends FormzInput<String, PasswordValidationError> {
@@ -20,8 +20,8 @@ class Password extends FormzInput<String, PasswordValidationError> {
     final hasLowercase = RegExp(r'(?=.*[a-z])').hasMatch(value);
     final hasUppercase = RegExp(r'(?=.*[A-Z])').hasMatch(value);
     final hasDigit = RegExp(r'(?=.*\d)').hasMatch(value);
+    final hasSpecial = RegExp(r'^(?=.*[!@#$%^&*()_+<><?:"|\\~`])').hasMatch(value);
     final isMinLength = value.length >= 8;
-    final hasValidCharacters = RegExp(r'^[a-zA-Z\d*]{8,}$').hasMatch(value);
 
     if (!hasLowercase) return PasswordValidationError.atLeastOneLowercase;
 
@@ -31,7 +31,7 @@ class Password extends FormzInput<String, PasswordValidationError> {
 
     if (!isMinLength) return PasswordValidationError.minLength;
 
-    if (!hasValidCharacters) return PasswordValidationError.invalidCharacter;
+    if (!hasSpecial) return PasswordValidationError.atLeastOneSpecialChar;
 
     return null;
   }
@@ -48,8 +48,8 @@ extension PasswordValidationErrorX on PasswordValidationError {
         return 'Password must have at least one digit.';
       case PasswordValidationError.minLength:
         return 'Password must be at least 8 characters long.';
-      case PasswordValidationError.invalidCharacter:
-        return 'Password contains invalid characters.';
+      case PasswordValidationError.atLeastOneSpecialChar:
+        return 'Password must have at least one special character.';
     }
   }
 }

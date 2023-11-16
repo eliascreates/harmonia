@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -9,9 +8,10 @@ class UserModel extends Equatable {
   final String email;
   final String imageUrl;
   final String username;
-  final List<String> followers;
-  final List<String> following;
-  final List<String> posts;
+  final int followerCount;
+  final int followingCount;
+  final int postCount;
+  final DateTime? timestamp;
 
   const UserModel({
     required this.uid,
@@ -20,9 +20,10 @@ class UserModel extends Equatable {
     required this.imageUrl,
     required this.username,
     required this.biography,
-    required this.followers,
-    required this.following,
-    required this.posts,
+    required this.followerCount,
+    required this.followingCount,
+    required this.postCount,
+    this.timestamp,
   });
 
   static const empty = UserModel(
@@ -32,9 +33,9 @@ class UserModel extends Equatable {
     imageUrl: '',
     username: '',
     biography: '',
-    followers: [],
-    following: [],
-    posts: [],
+    followerCount: 0,
+    followingCount: 0,
+    postCount: 0,
   );
 
   factory UserModel.fromFirebase(User? firebaseUser) {
@@ -51,13 +52,14 @@ class UserModel extends Equatable {
     return UserModel(
       uid: json['uid'] as String,
       displayName: json['displayName'] as String,
+      biography: json['biography'] as String,
       email: json['email'] as String,
       imageUrl: json['imageUrl'] as String,
       username: json['username'] as String,
-      biography: json['biography'] as String,
-      followers: List<String>.from(json['followers'] as List<dynamic>),
-      following: List<String>.from(json['following'] as List<dynamic>),
-      posts: List<String>.from(json['posts'] as List<dynamic>),
+      followerCount: json['followerCount'] as int,
+      followingCount: json['followingCount'] as int,
+      postCount: json['postCount'] as int,
+      timestamp: json['timestamp'].toDate() ?? DateTime.now(),
     );
   }
 
@@ -69,9 +71,10 @@ class UserModel extends Equatable {
       'imageUrl': imageUrl,
       'username': username,
       'biography': biography,
-      'followers': followers,
-      'following': following,
-      'posts': posts,
+      'followerCount': followerCount,
+      'followingCount': followingCount,
+      'postCount': postCount,
+      'timestamp': timestamp,
     };
   }
 
@@ -83,9 +86,10 @@ class UserModel extends Equatable {
         imageUrl,
         username,
         biography,
-        followers,
-        following,
-        posts,
+        followerCount,
+        followingCount,
+        postCount,
+        timestamp,
       ];
 
   UserModel copyWith({
@@ -95,9 +99,10 @@ class UserModel extends Equatable {
     String? email,
     String? imageUrl,
     String? username,
-    List<String>? followers,
-    List<String>? following,
-    List<String>? posts,
+    int? followerCount,
+    int? followingCount,
+    int? postCount,
+    DateTime? timestamp,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -106,9 +111,10 @@ class UserModel extends Equatable {
       email: email ?? this.email,
       imageUrl: imageUrl ?? this.imageUrl,
       username: username ?? this.username,
-      followers: followers ?? this.followers,
-      following: following ?? this.following,
-      posts: posts ?? this.posts,
+      followerCount: followerCount ?? this.followerCount,
+      followingCount: followingCount ?? this.followingCount,
+      postCount: postCount ?? this.postCount,
+      timestamp: timestamp ?? this.timestamp,
     );
   }
 }

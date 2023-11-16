@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:developer';
 
 class AppBlocObserver extends BlocObserver {
-  
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
@@ -19,5 +18,17 @@ class AppBlocObserver extends BlocObserver {
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     log('onError $error');
     super.onError(bloc, error, stackTrace);
+  }
+
+  @override
+  void onClose(BlocBase bloc) {
+    log('onClose: ${bloc.runtimeType}');
+    super.onClose(bloc);
+  }
+
+  @override
+  void onCreate(BlocBase bloc) {
+    log('onCreate: ${bloc.runtimeType}');
+    super.onCreate(bloc);
   }
 }

@@ -32,7 +32,14 @@ class SignInView extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          '- Harmonia -',
+          style: textTheme.titleLarge
+              ?.copyWith(color: theme.colorScheme.secondary),
+        ),
+      ),
       body: BlocBuilder<SignInBloc, SignInState>(
         builder: (context, state) {
           if (state.status == AuthStatus.loading) {

@@ -5,22 +5,11 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Icon(Icons.android, size: 200, color: theme.colorScheme.secondary),
-          Positioned(
-            top: 20,
-            child: Text(
-              '- Harmonia -',
-              style: textTheme.titleLarge
-                  ?.copyWith(color: theme.colorScheme.secondary),
-            ),
-          ),
-        ],
+      child: Image.asset(
+        'assets/images/welcome.png',
+        width: 200,
+        height: 200,
       ),
     );
   }
